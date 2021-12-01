@@ -1,9 +1,9 @@
 {
   "expo": {
     "name": "Recipe.Generator.App",
-    "slug": "Recipe.Generator.App",
+    "slug": "recipe-generator-app",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
@@ -17,13 +17,21 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lyp.recipe-generator-app",
+      "buildNumber":"1.0.0"
+
     },
     "android": {
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.lyp.recipe_generator_app",
+      "permissions": [
+        "ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
