@@ -1,30 +1,40 @@
 import React, { useState } from "react";
 import { TextInput, View, Text, Pressable, Button, StyleSheet, Modal, TouchableWithoutFeedback, Keyboard } from "react-native";
-
-
+import { RECIPES } from '../mockData/MockData';
+import { init, insertRecipe, reset, retrieveRecipesByUsername } from '../helpers/db';
 
 const LoginScreen = props => {
   const [username, setUsername] = useState('');
 
   const loginButtonPressHandler = () => {
-    props.login(username);
     setUsername('');
+
+    RECIPES.forEach(r => {
+      {
+        insertRecipe(r.title, r.imageUri, r.username)
+          .then(() => {
+            console.log("Added recipe");
+          })
+          .catch(err => {
+            console.log("Failed to add recipe");
+            console.log(err);
+          })
+      }
+    })
+    props.navigation.navigate('MainMenu');
   }
 
   return (
-    <Modal visible={props.displayLogin} animationType='slide'>
-      <TouchableWithoutFeedback onPress={() => {
-        Keyboard.dismiss();
-      }}>
-        <View style={styles.inputStyle}>
-          <TextInput style={styles.textStyle} onChangeText={(username) => setUsername(username)} value={username} placeholder="Username"></TextInput>
-          <View  >
-            <Button onPress={loginButtonPressHandler} title="Login" />
-          </View>
+    <TouchableWithoutFeedback onPress={() => {
+      Keyboard.dismiss();
+    }}>
+      <View style={styles.inputStyle}>
+        <TextInput style={styles.textStyle} onChangeText={(username) => setUsername(username)} value={username} placeholder="Username"></TextInput>
+        <View  >
+          <Button onPress={loginButtonPressHandler} title="Login" />
         </View>
-      </TouchableWithoutFeedback>
-
-    </Modal>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 

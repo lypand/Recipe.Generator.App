@@ -1,17 +1,36 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Button, TextInput, Image, FlatList } from 'react-native';
 import RecipeCard from '../components/RecipeCard'
+import { init, insertRecipe, reset, retrieveRecipesByUsername } from '../helpers/db'
+
 const UserRecipes = props => {
+    const [userRecipes, setUserRecipes] = useState([]);
+
+    useEffect(() => {
+        retrieveRecipesByUsername('')
+            .then((response) => {
+                console.log("Retrieving Recipes By Username");
+                console.log(response.rows._array); 
+                setUserRecipes(response.rows._array);
+            })
+            .catch(err => {
+                console.log("Failed Retrieve Recipes");
+                console.log(err);
+            })
+    }, []);
+
+
     return (
         <View style={styles.container}>
+            <Text>'{'Something'}</Text>
             <FlatList
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
                 keyExtractor={(item) => item.id}
-                data={props.userRecipes}
+                data={userRecipes}
                 renderItem={itemData => (
                     <View style={styles.recipeContainer}>
-                    <RecipeCard recipe={itemData.item} />
+                        <RecipeCard recipe={itemData.item} />
                     </View>
                 )}
             />
@@ -27,7 +46,7 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     recipeContainer: {
-        padding: 10, 
+        padding: 10,
     }
 });
 
