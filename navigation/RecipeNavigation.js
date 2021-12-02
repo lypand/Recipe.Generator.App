@@ -1,10 +1,12 @@
 import UserRecipes from '../screens/UserRecipes';
 import RandomRecipeScreen from '../screens/RandomRecipeScreen';
 import LoginScreen from '../screens/LoginScreen';
+import RecipeCreatorScreen from '../screens/RecipeCreatorScreen'
 import { NavigationContainer } from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'; 
 import { createStackNavigator} from '@react-navigation/stack';
 import React from 'react'; 
+import {Ionicons, AntDesign, Entypo, FontAwesome5} from '@expo/vector-icons'; 
 
 const BottomTab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -15,7 +17,7 @@ const StackRoot = () => {
         screenOptions={{
             headerTintColor: 'white',
             headerStyle: {
-                backgroundColor: 'red'
+                backgroundColor: '#6a0080'
             }
         }}>
         <Stack.Screen
@@ -25,9 +27,9 @@ const StackRoot = () => {
         />
         <Stack.Screen
             name="MainMenu"
-            component={RootStack}
-            options={{ title: "Saved Recipes" }}
-        />
+            component={RootStack}  
+            options={{ title: "Recipe Generator" }}
+            />
     </Stack.Navigator>
     )
 }
@@ -36,39 +38,45 @@ const RootStack = () => {
     return (
         <BottomTab.Navigator
         screenOptions={{
-            headerShown: false
+            headerShown: false,
         }}>
             <BottomTab.Screen
                 
                 name="UserRecipesScreen"
                 component={UserRecipes}
-                options={{ title: "Saved Recipes" }}
+                options={{
+                    tabBarIcon: (focused, color, size) => {
+                        return (
+                            <FontAwesome5  name='save' size={24} color='black'></FontAwesome5>
+                        )
+                    }
+                }}
             />
             <BottomTab.Screen
                 name="RandomRecipeScreen"
                 component={RandomRecipeScreen}
-                options={{ title: "Random Recipes" }}
+                options={{
+                    tabBarIcon: (focused, color, size) => {
+                        return ( 
+                            <Entypo  name='cycle' size={24} color='black'></Entypo>
+                        )
+                    }
+                }}
+            />
+            <BottomTab.Screen
+                name="RecipeCreatorScreen"
+                component={RecipeCreatorScreen}
+                options={{
+                    tabBarIcon: (focused, color, size) => {
+                        return ( 
+                            <Ionicons  name='ios-create-outline' size={24} color='black'></Ionicons>
+                        )
+                    }
+                }}
             />
         </BottomTab.Navigator>
     )
 }
 
-// Stack.navigationOptions = ({ navigation }) => {
-//     let tabBarVisible;
-//     if (navigation.state.routes.length > 1) {
-//         navigation.state.routes.map(route => {
-//             if (route.routeName === "LoginScreen") {
-//                 tabBarVisible = false;
-//                 console.log("here");
-//             } else {
-//                 tabBarVisible = true;
-//             }
-//         });
-//     }
-
-//     return {
-//         tabBarVisible
-//     };
-// };
 
 export default StackRoot;

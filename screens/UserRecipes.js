@@ -22,7 +22,6 @@ const UserRecipes = props => {
 
     return (
         <View style={styles.container}>
-            <Text>'{'Something'}</Text>
             <FlatList
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
