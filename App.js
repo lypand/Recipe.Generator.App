@@ -5,6 +5,7 @@ import { init, insertRecipe, reset, retrieveRecipesByUsername } from './helpers/
 import Header from './components/Header';
 import UserRecipes from './screens/UserRecipes';
 import RecipeCreatorScreen from './screens/RecipeCreatorScreen'
+import RandomRecipeScreen from './screens/RandomRecipeScreen';
 export default function App() {
 
   useEffect(() => {
@@ -58,7 +59,7 @@ export default function App() {
     <View style={styles.container}>
       <Header logout={logout} title="Recipe Generator" />
       <LoginScreen displayLogin={displayLogin} login={login} />
-      <RecipeCreatorScreen></RecipeCreatorScreen>
+      <RandomRecipeScreen></RandomRecipeScreen>
     {/*  <UserRecipes userRecipes={userRecipes} /> */}
     </View>
   );
