@@ -1,18 +1,40 @@
-import React, { useState }  from "react";
-import { useSelector } from 'react-redux';
-import { TextInput, View, Button, StyleSheet, TouchableWithoutFeedback, Keyboard } from "react-native";
+import React, { useState, useEffect }  from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import { TextInput, View, Button,Text, StyleSheet, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { insertRecipe } from '../repositories/databaseRepository';
+import {updateUsername} from '../store/actions/UserActions'; 
 
 const LoginScreen = props => {
 
   const [username, setUsername] = useState('');
-  const RECIPES = useSelector(state => state.recipes.allRecipes); 
+  const t = []; 
+  const RECIPES = useSelector(state => state.recipes.allRecipes);
+  const customRecipe = useSelector(state => state.customRecipe.customRecipe);
+  const dispatch = useDispatch();
+   
+    const updateUser = () =>{
+      dispatch(updateUsername(username)); 
+    }
+
+    useEffect(() => {
+      RECIPES.forEach(recipe => {
+        insertRecipe(recipe.title,recipe.imageUri)
+        .then((response) => {
+      })
+      .catch(err => {
+          console.log("Insert Recipes");
+          console.log(err);
+      }); 
+    }, [])
+  }); 
+
   const loginButtonPressHandler = () => {
 
+
     //TODO: Add action to update username redux store
-    //TODO: Remove populating test data 
-    populateTestRecipes(RECIPES);
-    props.navigation.navigate('MainMenu'); 
+    updateUser(); 
+    console.log(customRecipe);
+    props.navigation.navigate('MainMenu');  
   }
 
   return (
@@ -30,6 +52,7 @@ const LoginScreen = props => {
           <Button onPress={loginButtonPressHandler} title="Login" />
         </View>
       </View>
+
     </TouchableWithoutFeedback>
   );
 };
@@ -61,7 +84,6 @@ const populateTestRecipes = (RECIPES) => {
     {
       insertRecipe(r.title, r.imageUri, r.username)
         .then(() => {
-          console.log("Added recipe");
         })
         .catch(err => {
           console.log("Failed to add recipe");

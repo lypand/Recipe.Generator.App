@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Button, TextInput, Image, FlatList } from 'react-native';
 import RecipeCard from '../components/RecipeCard'
-import {retrieveRecipesByUsername } from '../repositories/databaseRepository'
+import {retrieveFavorites } from '../repositories/databaseRepository'
+import {useSelector} from 'react-redux'; 
 
 const SavedRecipeScreen = props => {
     const [userRecipes, setUserRecipes] = useState([]);
+    const username = useSelector(state => state.user.user.username); 
 
     useEffect(() => {
-        retrieveRecipesByUsername('')
+        retrieveFavorites()
             .then((response) => {
-                console.log("Retrieving Recipes By Username");
+                console.log("Retrieving Recipes for " + username);
                 setUserRecipes(response.rows._array);
             })
             .catch(err => {
@@ -18,9 +20,20 @@ const SavedRecipeScreen = props => {
             })
     }, []);
 
-
+    const testingButton = () => {
+        retrieveFavorites()
+        .then((response) => {
+            console.log(response); 
+            setUserRecipes(response.rows._array);
+        })
+        .catch(err => {
+            console.log("Failed Retrieve Recipes");
+            console.log(err);
+        })
+    }
     return (
         <View style={styles.container}>
+            <Button title='Load' onPress={testingButton}/>
             <FlatList
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}

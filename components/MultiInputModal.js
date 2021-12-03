@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
 import { Modal, Text, FlatList, View, StyleSheet, TextInput,Button } from 'react-native'
+import { useSelector, useDispatch } from "react-redux";
+import { updateCustomerRecipe } from "../store/actions/CustomRecipeAction";
 
-const MultiInputModel = props => {
+const MultiInputModel = props => { 
     const [currentIngredient, setCurrentIngredient] = useState('');
     const [ingredients, setIngredients] = useState([]);
+
+    const customRecipe = useSelector(state => state.customRecipe.customRecipe);
+
+    const dispatch = useDispatch(); 
+
+    const updateRecipe = () => {
+        dispatch(updateCustomerRecipe(customRecipe)); 
+    }
 
     const submitHandler = () => {
         setIngredients([...ingredients, currentIngredient]);
@@ -17,6 +27,7 @@ const MultiInputModel = props => {
 
     return (
         <Modal visible={props.displayIngredientModal}>
+            <Button title="Update custom recipe test" onPress={updateRecipe}/>
             <TextInput 
             onChangeText={(currentIngredient) => setCurrentIngredient(currentIngredient)} 
             value={currentIngredient} style={styles.input} 
@@ -41,6 +52,9 @@ const MultiInputModel = props => {
     )
 }
 
+export default MultiInputModel;
+
+//#region Styles
 const styles = StyleSheet.create({
     recipeContainer: {
         flexDirection: 'row'
@@ -52,5 +66,4 @@ const styles = StyleSheet.create({
         margin: 12,
     },
 });
-
-export default MultiInputModel;
+//#endregion

@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { updateCustomerRecipe } from "../store/actions/CustomRecipeAction";
 import { Button, StyleSheet, TextInput, View, FlatList, Text } from 'react-native';
 import MultiInputModel from "../components/MultiInputModal";
 
@@ -6,6 +8,14 @@ const CustomRecipeScreen = () => {
 
     const [ingredients, setIngredients] = useState([]);
     const [displayIngredientModal, setDisplayIngredientModal] = useState(false);
+    const customRecipe = useSelector(state => state.customRecipe);
+    
+
+    const dispatch = useDispatch(); 
+
+    const updateRecipe = () => {
+        dispatch(updateCustomerRecipe(customRecipe)); 
+    }
 
     //#region Methods
     const submitIngredients = (ingredients) => {
@@ -19,9 +29,9 @@ const CustomRecipeScreen = () => {
 
     return (
         <View style={styles.componentContainer} >
-            <TextInput style={styles.input} placeholder='Name'></TextInput>
-            <TextInput style={styles.input} placeholder='ImageUrl'></TextInput>
-            <TextInput style={styles.input} placeholder='Calories'></TextInput>
+            <TextInput value={customRecipe.title} style={styles.input} placeholder='Title'></TextInput>
+            <TextInput value={customRecipe.imageUri}  style={styles.input} placeholder='ImageUrl'></TextInput>
+            <TextInput value={customRecipe.calories} style={styles.input} placeholder='Calories'></TextInput>
 
             <Text>Ingredients:</Text>
             <View style={styles.recipeContainer}>

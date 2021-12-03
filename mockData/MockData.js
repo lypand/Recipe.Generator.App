@@ -1,4 +1,4 @@
-import Recipe from './Recipe'; 
+import Recipe from '../Modles/Recipe'; 
 
 
 export const RECIPES = [

@@ -1,13 +1,35 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
+import {useSelector} from 'react-redux'; 
 import { View, Image, StyleSheet} from 'react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
-import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, runOnJS } from "react-native-reanimated";
 import { withSpring } from "react-native-reanimated/src/reanimated2/animations";
-
+import { insertFavorite } from "../repositories/databaseRepository";
 const RandomRecipeScreen = props => {
 
+    const allRecipes = useSelector(state => state.recipes.allRecipes); 
+    const username = useSelector(state => state.user.user.username); 
     const translateX = useSharedValue(0);
     const translateY = useSharedValue(0);
+
+    const onEnd = () => {
+        const distance = Math.sqrt(translateX.value **2 + translateY.value **2); 
+
+        if(distance >= 150 ){
+            if (translateX.value < 1) {
+                console.log("Yuck");
+            }
+            else{
+                console.log("Yum this was liked by " + username);
+
+                insertFavorite(allRecipes[0].id).then(() => {
+                  }).catch(err => {
+                    console.log('Insert Favorite Failed');
+                    console.log(err);
+                  });
+            }
+        }
+    } 
 
     //#region Methods
     const PanGestureEvent = useAnimatedGestureHandler({
@@ -25,13 +47,6 @@ const RandomRecipeScreen = props => {
             if(distance < 150 ){
                 translateX.value = withSpring(0);
                 translateY.value = withSpring(0);
-            }else{
-                if (event.translationX < 1) {
-                    console.log("Left");
-                }
-                if (event.translationX > 1) {
-                    console.log("Right");
-                }
             }
         },
     })
@@ -53,10 +68,10 @@ const RandomRecipeScreen = props => {
 
     return (
         <View style={styles.container}>
-            <PanGestureHandler onGestureEvent={PanGestureEvent}>
+            <PanGestureHandler onEnded={onEnd} onGestureEvent={PanGestureEvent}>
                 <Animated.View
                     style={[styles.square, rStyle]}
-                ><Image source={{ uri: 'https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F44%2F2019%2F08%2F26230657%2F6474212.jpg' }}
+                ><Image source={{ uri: allRecipes[0].imageUri }}
                     style={styles.image} />
                 </Animated.View>
             </PanGestureHandler>

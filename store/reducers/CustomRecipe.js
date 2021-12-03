@@ -1,12 +1,28 @@
+import { UPDATE_RECIPE } from "../actions/CustomRecipeAction";
+
 const initialState = {
-    id: 0, 
-    title: '', 
-    imageUri: '', 
-    username: '',
+    customRecipe: {
+        id: 0,
+        title: '',
+        imageUri: '',
+        username: '',
+        calories: '',
+    }
 };
 
 const CustomRecipeReducer = (state = initialState, action) => {
-    return state;
+    switch(action.type){
+        case UPDATE_RECIPE:
+            var recipeCopy = {...state};
+            recipeCopy.imageUri = action.updatedRecipe.imageUri; 
+            recipeCopy.title = action.updatedRecipe.tite; 
+            recipeCopy.user = action.updatedRecipe.user; 
+            return Object.assign({}, state, {
+                //recipeCopy
+              });
+        default: 
+            return state
+    }
 }
 
-export default CustomRecipeReducer; 
+export default CustomRecipeReducer;
