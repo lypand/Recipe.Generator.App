@@ -1,7 +1,7 @@
-import CustomRecipeScreen from '../screens/SavedRecipeScreen';
+import SavedRecipeScreen from '../screens/SavedRecipeScreen'; '../screens/SavedRecipeScreen';
 import RandomRecipeScreen from '../screens/RandomRecipeScreen';
 import LoginScreen from '../screens/LoginScreen';
-import RecipeCreatorScreen from '../screens/RecipeCreatorScreen'
+import CustomRecipeScreen from '../screens/CustomRecipeScreen'
 import { NavigationContainer } from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'; 
 import { createStackNavigator} from '@react-navigation/stack';
@@ -43,7 +43,7 @@ const RootStack = () => {
             <BottomTab.Screen
                 
                 name="CustomRecipesScreen"
-                component={CustomRecipeScreen}
+                component={SavedRecipeScreen}
                 options={{
                     tabBarIcon: (focused, color, size) => {
                         return (
@@ -65,7 +65,7 @@ const RootStack = () => {
             />
             <BottomTab.Screen
                 name="RecipeCreatorScreen"
-                component={RecipeCreatorScreen}
+                component={CustomRecipeScreen}
                 options={{
                     tabBarIcon: (focused, color, size) => {
                         return ( 

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, StyleSheet, TextInput, View, FlatList, Text } from 'react-native';
 import MultiInputModel from "../components/MultiInputModal";
 
-const RecipeCreatorScreen = () => {
+const CustomRecipeScreen = () => {
 
     const [ingredients, setIngredients] = useState([]);
     const [displayIngredientModal, setDisplayIngredientModal] = useState(false);
@@ -51,7 +51,7 @@ const RecipeCreatorScreen = () => {
     );
 }
 
-export default RecipeCreatorScreen;
+export default CustomRecipeScreen;
 
 //#region Styles
 const styles = StyleSheet.create({
