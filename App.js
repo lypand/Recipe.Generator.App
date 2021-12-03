@@ -1,46 +1,58 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
-import LoginScreen from './screens/LoginScreen';
-import { init, insertRecipe, reset, retrieveRecipesByUsername } from './helpers/db'
+import React, {useEffect } from 'react';
+import { StyleSheet } from 'react-native';
+import { init, reset } from './repositories/databaseRepository'
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import StackRoot from './navigation/RecipeNavigation'
+import { createStore, combineReducers } from 'redux';
+import RecipeReducer from './store/reducers/RecipeReducer';
+import UserReducer from './store/reducers/UserReducer';
+import { Provider } from 'react-redux';
+import CustomRecipeReducer from './store/reducers/CustomRecipe'; 
 
-const Stack = createNativeStackNavigator();
-
+const store = createStore(combineReducers(
+  {
+  recipes: RecipeReducer,
+  user: UserReducer,
+  customRecipe: CustomRecipeReducer
+})); 
 
 export default function App() {
 
   useEffect(() => {
-    reset().then(() => {
-      console.log("Reset Table");
-    }).catch(err => {
-      console.log('Reset Failed');
-      console.log(err);
-    });
-    init().then(() => {
-      console.log("Initializ database");
-    }).catch(err => {
-      console.log('Initialize db failed');
-      console.log(err);
-    });
+    initialzeDatabase(); 
   }, []);
 
-  const [username, setUsername] = useState('');
-  const [userRecipes, setUserRecipes] = useState([]);
-  
-
   return (
-
-
-    <NavigationContainer>
-      <StackRoot></StackRoot>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <StackRoot></StackRoot>
+      </NavigationContainer>
+    </Provider>
   );
 }
 
+//#region Styles
 const styles = StyleSheet.create({
   container: {
     flex: 1
   },
 });
+//#endregion
+
+
+// #region Methods
+const initialzeDatabase = () => {
+  reset().then(() => {
+    console.log("Reset Table");
+  }).catch(err => {
+    console.log('Reset Failed');
+    console.log(err);
+  });
+  init().then(() => {
+    console.log("Initializ database");
+  }).catch(err => {
+    console.log('Initialize db failed');
+    console.log(err);
+  });
+}
+// #endregion

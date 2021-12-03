@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Button, TextInput, Image, FlatList } from 'react-native';
 import RecipeCard from '../components/RecipeCard'
-import { init, insertRecipe, reset, retrieveRecipesByUsername } from '../helpers/db'
+import {retrieveRecipesByUsername } from '../repositories/databaseRepository'
 
-const UserRecipes = props => {
+const SavedRecipeScreen = props => {
     const [userRecipes, setUserRecipes] = useState([]);
 
     useEffect(() => {
         retrieveRecipesByUsername('')
             .then((response) => {
                 console.log("Retrieving Recipes By Username");
-                console.log(response.rows._array); 
                 setUserRecipes(response.rows._array);
             })
             .catch(err => {
@@ -49,4 +48,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default UserRecipes;
+export default SavedRecipeScreen;

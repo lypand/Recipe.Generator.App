@@ -1,28 +1,21 @@
 import React, { useState } from "react";
 import { Button, StyleSheet, TextInput, View, FlatList, Text } from 'react-native';
-import { ScrollView } from "react-native-gesture-handler";
 import MultiInputModel from "../components/MultiInputModal";
-
 
 const RecipeCreatorScreen = () => {
 
-    const submitIngredients = (ingredients) => {
-        setIngredients(ingredients);
-    };
     const [ingredients, setIngredients] = useState([]);
     const [displayIngredientModal, setDisplayIngredientModal] = useState(false);
 
-    const addIngredientHandler = () => {
-        setDisplayIngredientModal(true);
-    }
-
-    const closeIngredientModal = () => {
-        setDisplayIngredientModal(false);
-    }
-
+    //#region Methods
+    const submitIngredients = (ingredients) => {
+        setIngredients(ingredients);
+    };
+    
     const updateIngredients = (newIngredients) => {
         setIngredients(newIngredients);
     }
+    //#endregion
 
     return (
         <View style={styles.componentContainer} >
@@ -45,13 +38,22 @@ const RecipeCreatorScreen = () => {
                     )}
                 />
             </View>
-            <Button title="Add Ingredients" onPress={addIngredientHandler} />
-            <MultiInputModel updateIngredients={updateIngredients} closeIngredientModal={closeIngredientModal} displayIngredientModal={displayIngredientModal} submitIngredients={submitIngredients} ingredients={ingredients}></MultiInputModel>
-                <Button title="Save Recipe" />
+            <Button title="Add Ingredients" onPress={() => setDisplayIngredientModal(true)} />
+            <MultiInputModel
+                updateIngredients={updateIngredients}
+                closeIngredientModal={(() => setDisplayIngredientModal(false))}
+                displayIngredientModal={displayIngredientModal}
+                submitIngredients={submitIngredients}
+                ingredients={ingredients}>
+            </MultiInputModel>
+            <Button title="Save Recipe" />
         </View>
     );
 }
 
+export default RecipeCreatorScreen;
+
+//#region Styles
 const styles = StyleSheet.create({
     componentContainer: {
         backgroundColor: 'white'
@@ -65,7 +67,7 @@ const styles = StyleSheet.create({
     },
     ingredientContainer: {
         borderWidth: 1,
-        margin:10,
+        margin: 10,
     },
 
     recipeContainer: {
@@ -89,5 +91,4 @@ const styles = StyleSheet.create({
     button: {
     }
 });
-
-export default RecipeCreatorScreen;
+//#endregion

@@ -1,15 +1,15 @@
 import React from "react";
-import { View, Button, Image, Touchable, StyleSheet, TouchableOpacityBase, Alert } from 'react-native';
+import { View, Image, StyleSheet} from 'react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { withSpring } from "react-native-reanimated/src/reanimated2/animations";
-
 
 const RandomRecipeScreen = props => {
 
     const translateX = useSharedValue(0);
     const translateY = useSharedValue(0);
 
+    //#region Methods
     const PanGestureEvent = useAnimatedGestureHandler({
         onStart: (event, context) => {
             context.translateX = translateX.value
@@ -49,6 +49,8 @@ const RandomRecipeScreen = props => {
         };
     });
 
+    //#endregion
+
     return (
         <View style={styles.container}>
             <PanGestureHandler onGestureEvent={PanGestureEvent}>
@@ -63,6 +65,7 @@ const RandomRecipeScreen = props => {
 }
 
 
+//#region Styles
 const styles = StyleSheet.create({
     container: {
         width: '100%',
@@ -74,5 +77,6 @@ const styles = StyleSheet.create({
 
     }
 })
+//#endregion
 
 export default RandomRecipeScreen;

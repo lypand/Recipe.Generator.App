@@ -1,4 +1,4 @@
-import UserRecipes from '../screens/UserRecipes';
+import CustomRecipeScreen from '../screens/SavedRecipeScreen';
 import RandomRecipeScreen from '../screens/RandomRecipeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RecipeCreatorScreen from '../screens/RecipeCreatorScreen'
@@ -42,8 +42,8 @@ const RootStack = () => {
         }}>
             <BottomTab.Screen
                 
-                name="UserRecipesScreen"
-                component={UserRecipes}
+                name="CustomRecipesScreen"
+                component={CustomRecipeScreen}
                 options={{
                     tabBarIcon: (focused, color, size) => {
                         return (

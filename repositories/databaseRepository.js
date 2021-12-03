@@ -1,7 +1,7 @@
 import * as SQLite from 'expo-sqlite'
 
-const db = SQLite.openDatabase('recipe.db');
-
+var db =   SQLite.openDatabase('recipe.db');
+ 
 export const retrieveRecipesByUsername = (username) =>{
     const promise = new Promise((resolve, reject) => {
         db.transaction(tx => {
