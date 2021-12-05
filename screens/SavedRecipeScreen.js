@@ -1,39 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Button, TextInput, Image, FlatList } from 'react-native';
 import RecipeCard from '../components/RecipeCard'
-import {retrieveFavorites } from '../repositories/databaseRepository'
-import {useSelector} from 'react-redux'; 
+import { retrieveFavorites } from '../repositories/databaseRepository'
+import { useSelector } from 'react-redux';
+import { useIsFocused } from '@react-navigation/native';
 
 const SavedRecipeScreen = props => {
     const [userRecipes, setUserRecipes] = useState([]);
-    const username = useSelector(state => state.user.user.username); 
+    const username = useSelector(state => state.user.user.username);
+    const favoriteRecipes = useSelector(state => state.recipes.favoriteRecipes)
+    const isFocused = useIsFocused();
 
     useEffect(() => {
-        retrieveFavorites()
-            .then((response) => {
-                console.log("Retrieving Recipes for " + username);
-                setUserRecipes(response.rows._array);
-            })
-            .catch(err => {
-                console.log("Failed Retrieve Recipes");
-                console.log(err);
-            })
-    }, []);
+        setUserRecipes(favoriteRecipes.favorites);
+    }, [isFocused]);
 
-    const testingButton = () => {
-        retrieveFavorites()
-        .then((response) => {
-            console.log(response); 
-            setUserRecipes(response.rows._array);
-        })
-        .catch(err => {
-            console.log("Failed Retrieve Recipes");
-            console.log(err);
-        })
-    }
     return (
         <View style={styles.container}>
-            <Button title='Load' onPress={testingButton}/>
             <FlatList
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
@@ -41,7 +24,7 @@ const SavedRecipeScreen = props => {
                 data={userRecipes}
                 renderItem={itemData => (
                     <View style={styles.recipeContainer}>
-                        <RecipeCard recipe={itemData.item} />
+                        <RecipeCard navigation={props.navigation} recipe={itemData.item} />
                     </View>
                 )}
             />
@@ -49,6 +32,9 @@ const SavedRecipeScreen = props => {
     )
 };
 
+export default SavedRecipeScreen;
+
+//#region Styles
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -60,5 +46,4 @@ const styles = StyleSheet.create({
         padding: 10,
     }
 });
-
-export default SavedRecipeScreen;
+//#endregion

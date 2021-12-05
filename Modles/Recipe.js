@@ -1,16 +1,14 @@
-import react from "react";
-
 class Recipe{
     constructor(
         id, 
         title, 
         imageUri,
-        username
+        webUri,
     ){
         this.id = id; 
         this.title = title; 
         this.imageUri = imageUri; 
-        this.username = username; 
+        this.webUri = webUri
     }
 }
 

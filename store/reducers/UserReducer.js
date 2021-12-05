@@ -10,7 +10,6 @@ const initialState = {
 const UserReducer = (state = initialState, action) => {
     switch (action.type) {
         case UPDATE_USER:
-            console.log("Atempting to update username of" + action.username); 
             const updatedUser = {...state.user}; 
             updatedUser.username = action.username; 
             return {...state, user: updatedUser}

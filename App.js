@@ -57,15 +57,13 @@ const initialzeDatabase = () => {
     console.log(err);
   });
 
-  RECIPES.forEach(recipe => {
-    insertRecipe(recipe.title, recipe.imageUri)
+  for (const recipe of RECIPES) {
+    insertRecipe(recipe.title, recipe.imageUri, recipe.webUri)
       .then((response) => {
       })
       .catch(err => {
-        console.log("Insert Recipes");
         console.log(err);
       })
-  });
-
-}
+  }
+};
 // #endregion

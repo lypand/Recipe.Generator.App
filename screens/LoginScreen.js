@@ -16,24 +16,11 @@ const LoginScreen = props => {
       dispatch(updateUsername(username)); 
     }
 
-    useEffect(() => {
-      RECIPES.forEach(recipe => {
-        insertRecipe(recipe.title,recipe.imageUri)
-        .then((response) => {
-      })
-      .catch(err => {
-          console.log("Insert Recipes");
-          console.log(err);
-      }); 
-    }, [])
-  }); 
-
   const loginButtonPressHandler = () => {
 
 
     //TODO: Add action to update username redux store
     updateUser(); 
-    console.log(customRecipe);
     props.navigation.navigate('MainMenu');  
   }
 
@@ -78,19 +65,5 @@ const styles = StyleSheet.create({
 });
 //#endregion
 
-//#region Methods
-const populateTestRecipes = (RECIPES) => {
-  RECIPES.forEach(r => {
-    {
-      insertRecipe(r.title, r.imageUri, r.username)
-        .then(() => {
-        })
-        .catch(err => {
-          console.log("Failed to add recipe");
-          console.log(err);
-        })
-    }
-  })
-}
-//#endregion
+
 

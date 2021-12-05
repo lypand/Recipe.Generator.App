@@ -3,19 +3,20 @@ import { ADD_FAVORITE_RECIPE } from '../actions/RecipeAction';
 
 const initialState = {
     allRecipes: RECIPES,
-    favoriteRecipes: [],
+    favoriteRecipes: {
+        favorites: []
+    }
 };
-
 
 const RecipeReducer = (state = initialState, action) => {
     switch (action.type) {
         case ADD_FAVORITE_RECIPE:
-            const existingIndex = state.favoriteRecipes.findIndex(meal => meal.id == action.recipeId); 
-            if(existingIndex == -1){
-                const recipe = state.allRecipes.find(recipe => recipe.id == action.id); 
-                return {...state, favoriteRecipes: state.favoriteRecipes.concat(recipe)}
+            if (state.favoriteRecipes.favorites.find(favorite => favorite.id == action.recipe.id)) {
+                return state;
             }
-            return state; 
+            const updatedFavorites = { ...state.favoriteRecipes };
+            updatedFavorites.favorites.push(action.recipe);
+            return { ...state, favoriteRecipes: updatedFavorites }
         default:
             return state;
     }

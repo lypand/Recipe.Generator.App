@@ -1,35 +1,39 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
 const RecipeCard = props => {
+    const recipeTouchedHandler = () => {
+        props.navigation.navigate('RecipeDetailScreen', { recipe: props.recipe });  
+    }
 
     return (
-        <TouchableOpacity>
-
+        <TouchableOpacity onPress={recipeTouchedHandler}>
             <View style={styles.listItem}>
-            <Image source = {{uri:props.recipe.imageUri}}
-   style = {styles.image}/>
+                <Image source={{ uri: props.recipe.imageUri }}
+                    style={styles.image} />
                 <Text>{props.recipe.title}</Text>
-            </View>  
-                        
-        </TouchableOpacity>      
+            </View>
+        </TouchableOpacity>
     )
 };
 
+export default RecipeCard;
+
+//#region Styles
 const styles = StyleSheet.create({
     listItem: {
         borderColor: 'black',
-        padding: 10, 
-        borderRadius: 10, 
+        padding: 10,
+        borderRadius: 10,
         borderWidth: 1,
         width: '100%',
-        shadowColor: 'black', 
+        shadowColor: 'black',
         shadowRadius: 5,
         shadowOffset: {
-            height: 0, 
+            height: 0,
             width: 0,
-        }, 
-        shadowOpacity: .5, 
+        },
+        shadowOpacity: .5,
         backgroundColor: 'white'
 
     },
@@ -38,4 +42,6 @@ const styles = StyleSheet.create({
         height: 250,
     }
 })
-export default RecipeCard;
+//#endregion
+
+

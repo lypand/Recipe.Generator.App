@@ -36,7 +36,7 @@ export const init = () => {
   const promise = new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS recipe (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL, imageUri TEXT NOT NULL);',
+        'CREATE TABLE IF NOT EXISTS recipe (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL, imageUri TEXT NOT NULL,webUri TEXT NOT NULL);',
         [],
         () => {
           resolve();
@@ -45,7 +45,7 @@ export const init = () => {
           reject(err);
         }
       ), tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY NOT NULL, recipeId INTEGER NOT NULL);',
+        'CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY NOT NULL, recipeId INTEGER NOT NULL UNIQUE);',
         [],
         () => {
           resolve();
@@ -59,12 +59,12 @@ export const init = () => {
   return promise;
 };
 
-export const insertRecipe = (title, imageUri) => {
+export const insertRecipe = (title, imageUri, webUri) => {
   const promise = new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        `INSERT INTO recipe (title, imageUri) VALUES (?, ?);`,
-        [title, imageUri],
+        `INSERT INTO recipe (title, imageUri, webUri) VALUES (?, ?, ?);`,
+        [title, imageUri, webUri],
         (_, result) => {
           resolve();
         },
@@ -99,8 +99,8 @@ export const insertFavorite = (recipeId) => {
   const promise = new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        `INSERT INTO favorites (recipeId) VALUES (?);`,
-        [recipeId],
+        `INSERT OR IGNORE INTO favorites (recipeId) VALUES (?) ;`,
+        [recipeId, recipeId],
         (_, result) => {
           resolve();
         },
