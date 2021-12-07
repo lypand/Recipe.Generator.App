@@ -60,6 +60,3 @@ const styles = StyleSheet.create({
   }
 });
 //#endregion
-
-
-

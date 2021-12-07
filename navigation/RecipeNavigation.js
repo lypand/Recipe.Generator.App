@@ -42,7 +42,7 @@ const StackRoot = () => {
 const RootStack = () => {
     return (
         <BottomTab.Navigator
-            initialRouteName="Random Recipes"
+            initialRouteName="Saved Recipes"
             screenOptions={{
                 headerShown: false,
                 gestureEnabled: false

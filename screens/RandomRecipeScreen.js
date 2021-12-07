@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { View, Image, StyleSheet, Text} from 'react-native';
+import { View, Image, StyleSheet, Text } from 'react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, runOnJS } from "react-native-reanimated";
 import { withSpring } from "react-native-reanimated/src/reanimated2/animations";
-import { updateRecipeStatus } from "../repositories/databaseRepository";
+import { updateRecipeStatus, getRecipesByStatus } from "../repositories/databaseRepository";
 import { addFavoriteRecipe, placeAllUnseenRecipesIntoState } from "../store/actions/RecipeAction";
 
 const RandomRecipeScreen = props => {
@@ -14,12 +14,25 @@ const RandomRecipeScreen = props => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const translateX = useSharedValue(0);
     const translateY = useSharedValue(0);
+    const [isLoading, setIsLoading] = useState(true);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(placeAllUnseenRecipesIntoState());
+        getRecipesByStatus(0)
+            .then((response) => {
+                //console.log(response.rows._array);
+                dispatch(placeAllUnseenRecipesIntoState(response.rows._array));
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }, []);
+
+    useEffect(() => {
+        console.log(allRecipes.length);
+        //setIsLoading(false);
+    }, [allRecipes]);
 
     const onEnd = () => {
         const distance = Math.sqrt(translateX.value ** 2 + translateY.value ** 2);
@@ -81,18 +94,21 @@ const RandomRecipeScreen = props => {
     });
 
     //#endregion
-
-    return (
+    if (isLoading && allRecipes.length < 1) {
+        return (<Text>Loading...</Text>);
+    }else{
+        return (
             <View style={styles.container}>
                 <PanGestureHandler onEnded={onEnd} onGestureEvent={PanGestureEvent}>
                     <Animated.View
-                        style={[styles.square, rStyle]}
-                    ><Image source={{ uri: allRecipes.length >= 0 ? allRecipes[currentIndex].imageUri : ''}}
-                        style={styles.image} />
+                        style={[styles.square, rStyle]}>
+                        <Image source={{ uri: allRecipes.length >= 0 ? allRecipes[currentIndex].imageUri : '' }}
+                            style={styles.image} />
                     </Animated.View>
                 </PanGestureHandler>
             </View>
-    )
+        )
+    }
 }
 
 
