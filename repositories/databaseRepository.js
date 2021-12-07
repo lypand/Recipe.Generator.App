@@ -1,7 +1,6 @@
 import * as SQLite from 'expo-sqlite'
 
 var db = SQLite.openDatabase('recipe.db');
-//maybe we just have a table that contains the ids of favoites? 
 
 
 export const reset = () => {
@@ -16,27 +15,20 @@ export const reset = () => {
         (_, err) => {
           reject(err);
         }
-      ),
-        tx.executeSql(
-          'DROP TABLE IF EXISTS favorites',
-          [],
-          () => {
-            resolve();
-          },
-          (_, err) => {
-            reject(err);
-          }
-        );
+      )
     });
   });
   return promise;
 }
 
+// Status 0 == unseen
+// Status 1 == liked
+// Status 2 == disliked
 export const init = () => {
   const promise = new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS recipe (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL, imageUri TEXT NOT NULL,webUri TEXT NOT NULL);',
+        'CREATE TABLE IF NOT EXISTS recipe (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL, imageUri TEXT NOT NULL,webUri TEXT NOT NULL, status INTEGER NOT NULL);',
         [],
         () => {
           resolve();
@@ -44,27 +36,18 @@ export const init = () => {
         (_, err) => {
           reject(err);
         }
-      ), tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY NOT NULL, recipeId INTEGER NOT NULL UNIQUE);',
-        [],
-        () => {
-          resolve();
-        },
-        (_, err) => {
-          reject(err);
-        }
-      );
+      )
     });
   });
   return promise;
 };
 
-export const insertRecipe = (title, imageUri, webUri) => {
+export const insertRecipe = (title, imageUri, webUri, status) => {
   const promise = new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        `INSERT INTO recipe (title, imageUri, webUri) VALUES (?, ?, ?);`,
-        [title, imageUri, webUri],
+        `INSERT INTO recipe (title, imageUri, webUri, status) VALUES (?, ?, ?, ?);`,
+        [title, imageUri, webUri, status],
         (_, result) => {
           resolve();
         },
@@ -77,12 +60,12 @@ export const insertRecipe = (title, imageUri, webUri) => {
   return promise;
 };
 
-export const retrieveFavorites = () => {
+export const getRecipesByStatus = (status) => {
   const promise = new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        'SELECT r.* FROM recipe r INNER JOIN favorites f ON r.id = f.recipeId;',
-        [],
+        'SELECT * FROM recipe WHERE status = ?;',
+        [status],
         (_, response) => {
           resolve(response);
         },
@@ -95,12 +78,13 @@ export const retrieveFavorites = () => {
   return promise;
 }
 
-export const insertFavorite = (recipeId) => {
+
+export const updateRecipeStatus = (recipeId, status) => {
   const promise = new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        `INSERT OR IGNORE INTO favorites (recipeId) VALUES (?) ;`,
-        [recipeId, recipeId],
+        `UPDATE recipe SET status = (?) WHERE id = (?)`,
+        [status, recipeId],
         (_, result) => {
           resolve();
         },

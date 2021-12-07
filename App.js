@@ -1,4 +1,4 @@
-import React, { useEffect, useSelector } from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { init, reset } from './repositories/databaseRepository'
 import { NavigationContainer } from '@react-navigation/native';
@@ -10,6 +10,7 @@ import { Provider } from 'react-redux';
 import CustomRecipeReducer from './store/reducers/CustomRecipe';
 import{RECIPES} from './mockData/MockData'; 
 import { insertRecipe } from './repositories/databaseRepository';
+import Constants from 'expo-constants';
 
 const store = createStore(combineReducers(
   {
@@ -20,7 +21,9 @@ const store = createStore(combineReducers(
 
 export default function App() {
   useEffect(() => {
-    initialzeDatabase();
+    if (false) {
+    initializeDatabase();
+    }
   }, []);
 
   return (
@@ -42,7 +45,7 @@ const styles = StyleSheet.create({
 
 
 // #region Methods
-const initialzeDatabase = () => {
+const initializeDatabase = () => {
   reset().then(() => {
     console.log("Reset Table");
   }).catch(err => {
@@ -51,14 +54,14 @@ const initialzeDatabase = () => {
   });
 
   init().then(() => {
-    console.log("Initializ database");
+    console.log("Initialize database");
   }).catch(err => {
     console.log('Initialize db failed');
     console.log(err);
   });
 
   for (const recipe of RECIPES) {
-    insertRecipe(recipe.title, recipe.imageUri, recipe.webUri)
+    insertRecipe(recipe.title, recipe.imageUri, recipe.webUri, 0)
       .then((response) => {
       })
       .catch(err => {

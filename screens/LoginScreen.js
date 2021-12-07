@@ -1,15 +1,12 @@
 import React, { useState, useEffect }  from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { TextInput, View, Button,Text, StyleSheet, TouchableWithoutFeedback, Keyboard } from "react-native";
-import { insertRecipe } from '../repositories/databaseRepository';
 import {updateUsername} from '../store/actions/UserActions'; 
 
 const LoginScreen = props => {
 
   const [username, setUsername] = useState('');
   const t = []; 
-  const RECIPES = useSelector(state => state.recipes.allRecipes);
-  const customRecipe = useSelector(state => state.customRecipe.customRecipe);
   const dispatch = useDispatch();
    
     const updateUser = () =>{
@@ -17,7 +14,6 @@ const LoginScreen = props => {
     }
 
   const loginButtonPressHandler = () => {
-
 
     //TODO: Add action to update username redux store
     updateUser(); 
@@ -64,6 +60,3 @@ const styles = StyleSheet.create({
   }
 });
 //#endregion
-
-
-
