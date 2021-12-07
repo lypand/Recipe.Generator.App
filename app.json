@@ -2,7 +2,7 @@
   "expo": {
     "name": "Recipe.Generator.App",
     "slug": "recipe-generator-app",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "splash": {
@@ -19,7 +19,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.lyp.recipe-generator-app",
-      "buildNumber":"2.0.0"
+      "buildNumber":"2.0.1"
 
     },
     "android": {
@@ -34,7 +34,8 @@
       ]
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "reset": "true"
     }
   }
 }

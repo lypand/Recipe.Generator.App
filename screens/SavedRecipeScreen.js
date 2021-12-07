@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Button, TextInput, Image, FlatList } from 'react-native';
 import RecipeCard from '../components/RecipeCard'
-import { retrieveFavorites } from '../repositories/databaseRepository'
 import { useSelector } from 'react-redux';
 import { useIsFocused } from '@react-navigation/native';
 
 const SavedRecipeScreen = props => {
     const [userRecipes, setUserRecipes] = useState([]);
-    const username = useSelector(state => state.user.user.username);
     const favoriteRecipes = useSelector(state => state.recipes.favoriteRecipes)
     const isFocused = useIsFocused();
 

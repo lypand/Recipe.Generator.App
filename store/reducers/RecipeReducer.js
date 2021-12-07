@@ -1,8 +1,10 @@
-import { RECIPES } from '../../mockData/MockData'
-import { ADD_FAVORITE_RECIPE } from '../actions/RecipeAction';
+import { getRecipesByStatus } from '../../repositories/databaseRepository';
+import { ADD_FAVORITE_RECIPE, GET_ALL_UNSEEN_RECIPES } from '../actions/RecipeAction';
 
 const initialState = {
-    allRecipes: RECIPES,
+    unSeenRecipes: {
+        unSeenRecipes: []
+    },
     favoriteRecipes: {
         favorites: []
     }
@@ -17,6 +19,11 @@ const RecipeReducer = (state = initialState, action) => {
             const updatedFavorites = { ...state.favoriteRecipes };
             updatedFavorites.favorites.push(action.recipe);
             return { ...state, favoriteRecipes: updatedFavorites }
+        case GET_ALL_UNSEEN_RECIPES: 
+            const unSeenRecipes = { ...state.unSeenRecipes };
+            unSeenRecipes.unSeenRecipes =  action.recipes;
+            console.log("here " + unSeenRecipes)
+            return { ...state, unSeenRecipes: unSeenRecipes }
         default:
             return state;
     }

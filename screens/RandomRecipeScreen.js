@@ -1,36 +1,43 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet, Text} from 'react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, runOnJS } from "react-native-reanimated";
 import { withSpring } from "react-native-reanimated/src/reanimated2/animations";
-import { insertFavorite } from "../repositories/databaseRepository";
-import { addFavoritRecipe } from "../store/actions/RecipeAction";
+import { updateRecipeStatus } from "../repositories/databaseRepository";
+import { addFavoriteRecipe, placeAllUnseenRecipesIntoState } from "../store/actions/RecipeAction";
 
 const RandomRecipeScreen = props => {
 
-    const allRecipes = useSelector(state => state.recipes.allRecipes);
+    const allRecipes = useSelector(state => state.recipes.unSeenRecipes.unSeenRecipes);
     const username = useSelector(state => state.user.user.username);
     const [currentIndex, setCurrentIndex] = useState(0);
     const translateX = useSharedValue(0);
     const translateY = useSharedValue(0);
 
-    const dispatch = useDispatch(); 
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(placeAllUnseenRecipesIntoState());
+    }, []);
 
     const onEnd = () => {
         const distance = Math.sqrt(translateX.value ** 2 + translateY.value ** 2);
 
         if (distance >= 150) {
             if (translateX.value < 1) {
-                console.log("Yuck");
+                updateRecipeStatus(allRecipes[currentIndex].id, 2).then(() => {
+                }).catch(err => {
+                    console.log(err);
+                });
             }
             else {
                 console.log("Yum this was liked by " + username);
-                
-                insertFavorite(allRecipes[currentIndex].id).then(() => {
-                    dispatch(addFavoritRecipe(allRecipes[currentIndex])); 
+
+                updateRecipeStatus(allRecipes[currentIndex].id, 1).then(() => {
+                    dispatch(addFavoriteRecipe(allRecipes[currentIndex]));
                 }).catch(err => {
-                     console.log(err);
+                    console.log(err);
                 });
             }
 
@@ -76,15 +83,15 @@ const RandomRecipeScreen = props => {
     //#endregion
 
     return (
-        <View style={styles.container}>
-            <PanGestureHandler onEnded={onEnd} onGestureEvent={PanGestureEvent}>
-                <Animated.View
-                    style={[styles.square, rStyle]}
-                ><Image source={{ uri: allRecipes[currentIndex].imageUri }}
-                    style={styles.image} />
-                </Animated.View>
-            </PanGestureHandler>
-        </View>
+            <View style={styles.container}>
+                <PanGestureHandler onEnded={onEnd} onGestureEvent={PanGestureEvent}>
+                    <Animated.View
+                        style={[styles.square, rStyle]}
+                    ><Image source={{ uri: allRecipes.length >= 0 ? allRecipes[currentIndex].imageUri : ''}}
+                        style={styles.image} />
+                    </Animated.View>
+                </PanGestureHandler>
+            </View>
     )
 }
 
