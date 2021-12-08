@@ -2,6 +2,23 @@ import * as SQLite from 'expo-sqlite'
 
 var db = SQLite.openDatabase('recipe.db');
 
+export const doesTableExist = (tableName) => {
+  const promise = new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM sqlite_master WHERE type=\'table\' AND name=?',
+        [tableName],
+        (_, response) => {
+          resolve(response);
+        },
+        (_, err) => {
+          reject(err);
+        }
+      );
+    });
+  });
+  return promise;
+}
 
 export const reset = () => {
   const promise = new Promise((resolve, reject) => {

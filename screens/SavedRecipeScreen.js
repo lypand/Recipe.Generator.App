@@ -8,50 +8,46 @@ import { addFavoriteRecipes } from "../store/actions/RecipeAction";
 import Recipe from "../Modles/Recipe";
 
 const SavedRecipeScreen = props => {
-    const [userRecipes, setUserRecipes] = useState([]);
     const favoriteRecipes = useSelector(state => state.recipes.favoriteRecipes.favorites);
-
     const isFocused = useIsFocused();
-    const dispatch = useDispatch(); 
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        setUserRecipes(favoriteRecipes);
-        getRecipesByStatus(1)
-            .then((response) => {
-                const recipesToAdd = []; 
-                for (const recipe of response.rows._array) {
-                    recipesToAdd.push(new Recipe(recipe.id, recipe.title, recipe.imageUri, recipe.webUri));
-                  }
-                  console.log(recipesToAdd); 
-                  dispatch(addFavoriteRecipes(recipesToAdd));
-            })
-            .catch(err => {
-                console.log(err);
-            }) 
+        if (favoriteRecipes.length < 1) {
+            getRecipesByStatus(1)
+                .then((response) => {
+                    const recipesToAdd = [];
+                    for (const recipe of response.rows._array) {
+                        recipesToAdd.push(new Recipe(recipe.id, recipe.title, recipe.imageUri, recipe.webUri));
+                    }
+                    dispatch(addFavoriteRecipes(recipesToAdd));
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
     }, []);
 
-    const load = () => {
-        console.log(favoriteRecipes);
-        setUserRecipes(['']); 
-    }
-
-    return (
-        <View style={styles.container}>
-            <Button title="load" onPress={load} />
-            <FlatList
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={(item) => item.id}
-                data={favoriteRecipes}
-                renderItem={itemData => (
-                    <View style={styles.recipeContainer}>
-                        <RecipeCard navigation={props.navigation} recipe={itemData.item} />
-                    </View>
-                )}
-            />
-        </View>
-    )
-};
+    if (favoriteRecipes.length < 1) {
+        return (<View><Text>No Recipes Saved Yet!</Text></View>)
+    } else {
+        return (
+            <View style={styles.container}>
+                <FlatList
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                    keyExtractor={(item) => item.id}
+                    data={favoriteRecipes}
+                    renderItem={itemData => (
+                        <View style={styles.recipeContainer}>
+                            <RecipeCard navigation={props.navigation} recipe={itemData.item} />
+                        </View>
+                    )}
+                />
+            </View>
+        )
+    };
+}
 
 export default SavedRecipeScreen;
 

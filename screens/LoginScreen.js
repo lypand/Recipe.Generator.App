@@ -1,38 +1,92 @@
-import React, { useState, useEffect }  from "react";
-import { useSelector, useDispatch } from 'react-redux';
-import { TextInput, View, Button,Text, StyleSheet, TouchableWithoutFeedback, Keyboard } from "react-native";
-import {updateUsername} from '../store/actions/UserActions'; 
+import React, { useState, useEffect } from "react";
+import { useDispatch } from 'react-redux';
+import { TextInput, View, Button, Text, StyleSheet, TouchableWithoutFeedback, Keyboard, Alert } from "react-native";
+import { updateUsername } from '../store/actions/UserActions';
+import { reset, insertRecipe, init, doesTableExist } from '../repositories/databaseRepository'
+import { RECIPES } from '../mockData/MockData';
 
 const LoginScreen = props => {
 
   const [username, setUsername] = useState('');
-  const t = []; 
+  const t = [];
   const dispatch = useDispatch();
-   
-    const updateUser = () =>{
-      dispatch(updateUsername(username)); 
+
+  useEffect(() => {
+    doesTableExist('recipe').then((response) => {
+      if (response.rows.length < 1) {
+        initAndPopulateTables();
+      }
+    })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+    , []);
+
+  const initAndPopulateTables = () => {
+    init().then(() => {
+      console.log("Initialize database");
+    }).catch(err => {
+      console.log('Initialize db failed');
+      console.log(err);
+    });
+
+    for (const recipe of RECIPES) {
+      insertRecipe(recipe.title, recipe.imageUri, recipe.webUri, 0)
+        .then((response) => {
+        })
+        .catch(err => {
+          console.log(err);
+        })
     }
+  }
 
+  const resetTablesDialogHandler = () => {
+    Alert.alert(
+      "Reset All Tables",
+      "Are you sure you want to reset all tables?",
+      [
+        {
+          text: "Confirm",
+          onPress: () => resetTables()
+        },
+        {
+          text: "Cancel",
+        }
+      ]
+    )
+  }
+
+  const resetTables = () => {
+    reset().then(() => {
+      console.log("Reset Table");
+    }).catch(err => {
+      console.log('Reset Failed');
+      console.log(err);
+    });
+
+    initAndPopulateTables();
+  }
+  
   const loginButtonPressHandler = () => {
-
-    //TODO: Add action to update username redux store
-    updateUser(); 
-    props.navigation.navigate('MainMenu');  
+    dispatch(updateUsername(username));
+    props.navigation.navigate('MainMenu');
   }
 
   return (
-    <TouchableWithoutFeedback 
-    onPress={() => {
-      Keyboard.dismiss();
-    }}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+      }}>
       <View style={styles.inputStyle}>
-        <TextInput 
-        style={styles.textStyle} 
-        onChangeText={(username) => setUsername(username)} 
-        value={username} 
-        placeholder="Username"></TextInput>
+        <TextInput
+          style={styles.textStyle}
+          onChangeText={(username) => setUsername(username)}
+          value={username}
+          placeholder="Username"></TextInput>
         <View  >
           <Button onPress={loginButtonPressHandler} title="Login" />
+          <Button onPress={resetTablesDialogHandler} title="Reset All" />
         </View>
       </View>
 
