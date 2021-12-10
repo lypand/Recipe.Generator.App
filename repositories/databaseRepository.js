@@ -65,8 +65,8 @@ export const insertRecipe = (title, imageUri, webUri, status) => {
       tx.executeSql(
         `INSERT INTO recipe (title, imageUri, webUri, status) VALUES (?, ?, ?, ?);`,
         [title, imageUri, webUri, status],
-        (_, result) => {
-          resolve();
+        (_, response) => {
+          resolve(response);
         },
         (_, err) => {
           reject(err);
