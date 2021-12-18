@@ -5,7 +5,7 @@ import { Button, StyleSheet, TextInput, View, FlatList, Text, ScrollView, Alert 
 import MultiInputModel from "../components/MultiInputModal";
 import { insertRecipe, reset } from "../repositories/databaseRepository";
 import { addFavoriteRecipe } from "../store/actions/RecipeAction";
-import Recipe from "../Modles/Recipe";
+import Recipe from "../Models/Recipe";
 
 const CustomRecipeScreen = () => {
 
@@ -103,8 +103,6 @@ const CustomRecipeScreen = () => {
                     </View>
                 )}
             />
-
-
         </View>
     );
 }

@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useIsFocused } from '@react-navigation/native';
 import { getRecipesByStatus } from "../repositories/databaseRepository";
 import { addFavoriteRecipes } from "../store/actions/RecipeAction";
-import Recipe from "../Modles/Recipe";
+import Recipe from "../Models/Recipe";
 
 const SavedRecipeScreen = props => {
     const favoriteRecipes = useSelector(state => state.recipes.favoriteRecipes.favorites);
