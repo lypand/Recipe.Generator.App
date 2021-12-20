@@ -35,7 +35,8 @@
     "react-navigation-header-buttons": "^9.0.1",
     "react-panresponder-web": "^1.0.2",
     "react-redux": "^7.2.6",
-    "redux": "^4.1.2"
+    "redux": "^4.1.2",
+    "use-fit-text": "^2.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

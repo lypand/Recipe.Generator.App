@@ -105,7 +105,7 @@ const RandomRecipeScreen = props => {
                         <View>
                             <Image source={{ uri: unSeenRecipes.length >= 0 ? unSeenRecipes[currentIndex].imageUri : '' }}
                                 style={styles.image} />
-                            <Text style={styles.text}>{unSeenRecipes[currentIndex].title}</Text>
+                            <Text numberOfLines = {2} adjustsFontSizeToFit = {true} style={styles.text}>{unSeenRecipes[currentIndex].title}</Text>
                         </View>
                     </Animated.View>
                 </PanGestureHandler>
@@ -113,7 +113,6 @@ const RandomRecipeScreen = props => {
         )
     }
 }
-
 
 //#region Styles
 const styles = StyleSheet.create({
@@ -126,12 +125,28 @@ const styles = StyleSheet.create({
         width: '95%',
         height: '95%',
         marginLeft:'2.5%',
-        marginTop:'2.5%',
+        marginBottom:'10%',
+        borderRadius: 20,
+        borderColor: 'black',
+        borderWidth:5,
     },
     text: {
+        flex:1,
         position: 'absolute',
+        backgroundColor:'rgba(220,220,220,0.8)',
         alignSelf:'center',
-        marginTop:'135%',
+        justifyContent: 'center',
+        textAlign:'center',
+        marginTop:'130%',
+        marginBottom:'-75%',
+        width:'90%',
+        height:30,
+        fontSize:20,
+        borderWidth:5,
+        borderRadius:10,
+        borderColor: 'gray',
+        fontWeight:'bold',
+        overflow: 'hidden',
     }
 })
 //#endregion
