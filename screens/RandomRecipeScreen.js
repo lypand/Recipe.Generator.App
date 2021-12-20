@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { View, Image, StyleSheet, Text, Alert, Dimensions } from 'react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
-import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { withSpring } from "react-native-reanimated/src/reanimated2/animations";
 import { updateRecipeStatus, getRecipesByStatus } from "../repositories/databaseRepository";
 import { addFavoriteRecipe, placeAllUnseenRecipesIntoState, removeUnseenRecipe } from "../store/actions/RecipeAction";
@@ -15,7 +15,7 @@ const RandomRecipeScreen = props => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const translateX = useSharedValue(0);
     const translateY = useSharedValue(0);
-
+    const [backgroundColor, setBackgroundColor] = useState('sliver');
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -41,7 +41,7 @@ const RandomRecipeScreen = props => {
             else {
                 updateRecipeStatus(unSeenRecipes[currentIndex].id, 1).then(() => {
                     dispatch(removeUnseenRecipe(unSeenRecipes[currentIndex]));
-                    dispatch(addFavoriteRecipe(new Recipe(unSeenRecipes[currentIndex].id, unSeenRecipes[currentIndex].title, unSeenRecipes[currentIndex].webUri, unSeenRecipes[currentIndex].imageUri, '', '', '','', '', '', JSON.parse(unSeenRecipes[currentIndex].ingredients), JSON.parse(unSeenRecipes[currentIndex].instructions))));
+                    dispatch(addFavoriteRecipe(new Recipe(unSeenRecipes[currentIndex].id, unSeenRecipes[currentIndex].title, unSeenRecipes[currentIndex].webUri, unSeenRecipes[currentIndex].imageUri, '', '', '', '', '', '', JSON.parse(unSeenRecipes[currentIndex].ingredients), JSON.parse(unSeenRecipes[currentIndex].instructions))));
                 }).catch(err => {
                     console.log(err);
                 });
@@ -67,9 +67,23 @@ const RandomRecipeScreen = props => {
         onActive: (event, context) => {
             translateX.value = event.translationX + context.translateX;
             translateY.value = event.translationY + context.translateY;
+
+            const distance = Math.sqrt(translateX.value ** 2 + translateY.value ** 2);
+            if (distance > 150) {
+                if (event.translationX < 1) {
+                    runOnJS(setBackgroundColor)('green');
+                }
+                else {
+                    runOnJS(setBackgroundColor)('red');
+                }
+            }else{
+                runOnJS(setBackgroundColor)('silver');
+            }
         },
         onEnd: (event, context) => {
             const distance = Math.sqrt(translateX.value ** 2 + translateY.value ** 2);
+            runOnJS(setBackgroundColor)('silver');
+
 
             if (distance < 150) {
                 translateX.value = withSpring(0);
@@ -96,14 +110,16 @@ const RandomRecipeScreen = props => {
         return (<Text>Loading...</Text>);
     } else {
         return (
-            <View style={styles.container}>
+            <View style={styles.container, {
+                backgroundColor: backgroundColor,
+            }}>
                 <PanGestureHandler onEnded={onEnd} onGestureEvent={PanGestureEvent}>
                     <Animated.View
                         style={[styles.square, rStyle]}>
                         <View>
                             <Image source={{ uri: unSeenRecipes.length >= 0 ? unSeenRecipes[currentIndex].imageUri : '' }}
                                 style={styles.image} />
-                            <Text numberOfLines = {2} adjustsFontSizeToFit = {true} style={styles.text}>{unSeenRecipes[currentIndex].title}</Text>
+                            <Text numberOfLines={2} adjustsFontSizeToFit={true} style={styles.text}>{unSeenRecipes[currentIndex].title}</Text>
                         </View>
                     </Animated.View>
                 </PanGestureHandler>
@@ -117,33 +133,32 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         height: '100%',
-        backgroundColor: 'silver',
     },
     image: {
         width: '95%',
         height: '95%',
-        marginLeft:'2.5%',
-        marginBottom:'10%',
+        marginLeft: '2.5%',
+        marginBottom: '10%',
         borderRadius: 20,
         borderColor: 'black',
-        borderWidth:5,
+        borderWidth: 5,
     },
     text: {
-        flex:1,
+        flex: 1,
         position: 'absolute',
-        backgroundColor:'rgba(220,220,220,0.8)',
-        alignSelf:'center',
+        backgroundColor: 'rgba(220,220,220,0.8)',
+        alignSelf: 'center',
         justifyContent: 'center',
-        textAlign:'center',
-        marginTop:'130%',
-        marginBottom:'-75%',
-        width:'90%',
-        height:30,
-        fontSize:20,
-        borderWidth:5,
-        borderRadius:10,
+        textAlign: 'center',
+        marginTop: '130%',
+        marginBottom: '-75%',
+        width: '90%',
+        height: 30,
+        fontSize: 20,
+        borderWidth: 5,
+        borderRadius: 10,
         borderColor: 'gray',
-        fontWeight:'bold',
+        fontWeight: 'bold',
         overflow: 'hidden',
     }
 })
