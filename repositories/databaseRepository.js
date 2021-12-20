@@ -45,7 +45,7 @@ export const init = () => {
   const promise = new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS recipe (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL, imageUri TEXT NOT NULL,webUri TEXT NOT NULL, status INTEGER NOT NULL);',
+        'CREATE TABLE IF NOT EXISTS recipe (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL, imageUri TEXT NOT NULL,webUri TEXT NOT NULL, ingredients TEXT NOT NULL, instructions TEXT NOT NULL, status INTEGER NOT NULL);',
         [],
         () => {
           resolve();
@@ -59,12 +59,12 @@ export const init = () => {
   return promise;
 };
 
-export const insertRecipe = (title, imageUri, webUri, status) => {
+export const insertRecipe = (title, imageUri, webUri, ingredients, instructions, status) => {
   const promise = new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        `INSERT INTO recipe (title, imageUri, webUri, status) VALUES (?, ?, ?, ?);`,
-        [title, imageUri, webUri, status],
+        `INSERT INTO recipe (title, imageUri, webUri, ingredients, instructions, status) VALUES (?, ?, ?, ?, ?, ?);`,
+        [title, imageUri, webUri, JSON.stringify(ingredients),JSON.stringify(instructions), status],
         (_, response) => {
           resolve(response);
         },

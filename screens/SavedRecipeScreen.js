@@ -8,7 +8,10 @@ import { addFavoriteRecipes } from "../store/actions/RecipeAction";
 import Recipe from "../Models/Recipe";
 
 const SavedRecipeScreen = props => {
-    const favoriteRecipes = useSelector(state => state.recipes.favoriteRecipes.favorites);
+    const favoriteRecipes = useSelector(state => {
+        return state.recipes.favoriteRecipes.favorites
+    });
+    const [filterInput, setFilterInput] = useState(favoriteRecipes); 
     const isFocused = useIsFocused();
     const dispatch = useDispatch();
 
@@ -18,7 +21,9 @@ const SavedRecipeScreen = props => {
                 .then((response) => {
                     const recipesToAdd = [];
                     for (const recipe of response.rows._array) {
-                        recipesToAdd.push(new Recipe(recipe.id, recipe.title, recipe.imageUri, recipe.webUri));
+                        console.log("testing" + JSON.parse(recipe.ingredients)); 
+                        console.log("testing" + JSON.parse(recipe.instructions)); 
+                        recipesToAdd.push(new Recipe(recipe.id, recipe.title, recipe.webUri, recipe.imageUri,'','','','','','', JSON.parse(recipe.ingredients), JSON.parse(recipe.instructions)));
                     }
                     dispatch(addFavoriteRecipes(recipesToAdd));
                 })
@@ -28,16 +33,52 @@ const SavedRecipeScreen = props => {
         }
     }, []);
 
+
+    const filter = (inputText) => {
+        if(inputText === ''){
+            setFilterInput(favoriteRecipes); 
+            return; 
+        }
+        setFilterInput(favoriteRecipes.filter((item) => executeFilter(item, inputText))); 
+    }
+
+    const executeFilter = (item, inputText) => {
+        if(item.title.toLowerCase().includes(inputText.toLowerCase())){
+            return true; 
+        }
+
+        for(let i = 0; i < item.ingredients.length; i++){
+            console.log(item.ingredients[i]); 
+            if(item.ingredients[i].toLowerCase().includes(inputText.toLowerCase())){
+                return true; 
+            }
+        }
+        return false; 
+    }
+    
+    const ages = [32, 33, 16, 40];
+const result = ages.filter(checkAdult);
+
+function checkAdult(age) {
+  return age >= 18;
+}
+
+
+function checkAdult(age) {
+  return age >= 18;
+}
+
     if (favoriteRecipes.length < 1) {
         return (<View><Text>No Recipes Saved Yet!</Text></View>)
     } else {
         return (
             <View style={styles.container}>
+                <TextInput style={styles.input} placeholder="search" onChangeText={(input) => filter(input)}></TextInput>
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item) => item.id}
-                    data={favoriteRecipes}
+                    data={filterInput}
                     renderItem={itemData => (
                         <View style={styles.recipeContainer}>
                             <RecipeCard navigation={props.navigation} recipe={itemData.item} />
@@ -53,6 +94,10 @@ export default SavedRecipeScreen;
 
 //#region Styles
 const styles = StyleSheet.create({
+    input: {
+        borderWidth: 1,
+        width: '80%'
+    },
     container: {
         flex: 1,
         padding: 10,

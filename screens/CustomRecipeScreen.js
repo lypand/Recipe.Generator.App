@@ -20,8 +20,8 @@ const CustomRecipeScreen = () => {
     const dispatch = useDispatch();
 
     const saveRecipe = () => {
-        insertRecipe(title, imageUri, '', 1).then((response) => {
-            dispatch(addFavoriteRecipe(new Recipe(response.insertId, title, imageUri, webUri)));
+        insertRecipe(title, imageUri, '', ingredients, instructions, 1).then((response) => {
+            dispatch(addFavoriteRecipe(new Recipe(response.insertId, title, webUri, imageUri , '','','','','','', ingredients, instructions)));
             Alert.alert('Recipe Saved to Favorites')
             resetPage(); 
         }).catch(err => {

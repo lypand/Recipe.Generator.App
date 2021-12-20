@@ -57,7 +57,7 @@ const RecipeDetailScreen = ({ route }) => {
                     <>
                         {headerComponent()}
                         <Text> {'\n'}</Text>
-                        <Text style={styles.textHeaders}>Ingredients</Text>
+                        <Text style={styles.textHeaders}>{recipe.ingredients.length > 1 ? 'Ingredients' : ''}</Text>
 
                     </>
                 }
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flex: 1,
         alignItems: 'center',
-        backgroundColor: 'red'
+        backgroundColor: 'white'
     },
     title: {
         fontSize: 50,

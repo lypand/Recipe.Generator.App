@@ -32,7 +32,7 @@ const LoginScreen = props => {
     });
 
     for (const recipe of RECIPES) {
-      insertRecipe(recipe.title, recipe.imageUri, recipe.webUri, 0)
+      insertRecipe(recipe.title, recipe.imageUri, recipe.webUri, recipe.ingredients, recipe.instructions, 0)
         .then((response) => {
         })
         .catch(err => {

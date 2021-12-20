@@ -6,10 +6,13 @@ import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue }
 import { withSpring } from "react-native-reanimated/src/reanimated2/animations";
 import { updateRecipeStatus, getRecipesByStatus } from "../repositories/databaseRepository";
 import { addFavoriteRecipe, placeAllUnseenRecipesIntoState, removeUnseenRecipe } from "../store/actions/RecipeAction";
+import Recipe from "../Models/Recipe";
 
 const RandomRecipeScreen = props => {
 
-    const unSeenRecipes = useSelector(state => state.recipes.unSeenRecipes.unSeenRecipes);
+    const unSeenRecipes = useSelector(state => {
+        return state.recipes.unSeenRecipes.unSeenRecipes
+    });
     const username = useSelector(state => state.user.user.username);
     const [currentIndex, setCurrentIndex] = useState(0);
     const translateX = useSharedValue(0);
@@ -46,7 +49,7 @@ const RandomRecipeScreen = props => {
 
                 updateRecipeStatus(unSeenRecipes[currentIndex].id, 1).then(() => {
                     dispatch(removeUnseenRecipe(unSeenRecipes[currentIndex]));
-                    dispatch(addFavoriteRecipe(unSeenRecipes[currentIndex]));
+                    dispatch(addFavoriteRecipe(new Recipe(unSeenRecipes[currentIndex].id, unSeenRecipes[currentIndex].title, unSeenRecipes[currentIndex].webUri, unSeenRecipes[currentIndex].imageUri, '', '', '','', '', '', JSON.parse(unSeenRecipes[currentIndex].ingredients), JSON.parse(unSeenRecipes[currentIndex].instructions))));
                 }).catch(err => {
                     console.log(err);
                 });

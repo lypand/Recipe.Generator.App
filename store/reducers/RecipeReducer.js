@@ -36,16 +36,11 @@ const initialState = {
 const RecipeReducer = (state = initialState, action) => {
     switch (action.type) {
         case REMOVE_UNSEEN_RECIPE:
-            //console.log(state.unSeenRecipes.unSeenRecipes.find(unseen => unseen.id == action.recipe.id)); 
             if (state.unSeenRecipes.unSeenRecipes.find(unseen => unseen.id == action.recipe.id)) {
                 // Remove from unseen
                 const allUnseenRecipes = { ...state.unSeenRecipes };
-                console.log(allUnseenRecipes); 
-                console.log("Looking for: " + action.recipe.id); 
-                //console.log(allUnseenRecipes); 
 
-                const index = allUnseenRecipes.findIndex(unseenRecipe => unseenRecipe.id == action.recipe.id);
-                if (index > -1) {
+                if (!(allUnseenRecipes.unSeenRecipes.some(unseenRecipe => unseenRecipe.id == action.recipe.id))) {
                     allUnseenRecipes.splice(index, 1);
                 }
 
@@ -68,6 +63,7 @@ const RecipeReducer = (state = initialState, action) => {
         case ADD_FAVORITE_RECIPES:
             const favoriteRecipes = { ...state.favoriteRecipes };
             const result = favoriteRecipes.favorites.concat(action.recipes);
+            console.log(action.recipe); 
             favoriteRecipes.favorites = result;
             return { ...state, favoriteRecipes: favoriteRecipes }
         default:

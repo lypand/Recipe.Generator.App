@@ -13,7 +13,6 @@ const CustomCheckBox = (props) => {
                 checkedColor="#0F0"
                 containerStyle={{ width: "75%" }}
                 onPress={() => {
-                    console.log(checked);
                     setChecked(!checked)
                 }}
                 size={30}
