@@ -58,7 +58,6 @@ const RecipeDetailScreen = ({ route }) => {
                         {headerComponent()}
                         <Text> {'\n'}</Text>
                         <Text style={styles.textHeaders}>{recipe.ingredients.length > 1 ? 'Ingredients' : ''}</Text>
-
                     </>
                 }
                 ListFooterComponent={

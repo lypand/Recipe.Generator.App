@@ -63,7 +63,6 @@ const RecipeReducer = (state = initialState, action) => {
         case ADD_FAVORITE_RECIPES:
             const favoriteRecipes = { ...state.favoriteRecipes };
             const result = favoriteRecipes.favorites.concat(action.recipes);
-            console.log(action.recipe); 
             favoriteRecipes.favorites = result;
             return { ...state, favoriteRecipes: favoriteRecipes }
         default:

@@ -28,10 +28,6 @@ const RandomRecipeScreen = props => {
             })
     }, []);
 
-    useEffect(() => {
-        console.log(unSeenRecipes.length);
-    }, [unSeenRecipes]);
-
     const onEnd = () => {
         const distance = Math.sqrt(translateX.value ** 2 + translateY.value ** 2);
 
