@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { View, Image, StyleSheet, Text, Alert } from 'react-native';
+import { View, Image, StyleSheet, Text, Alert, Dimensions } from 'react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { withSpring } from "react-native-reanimated/src/reanimated2/animations";
@@ -10,9 +10,7 @@ import Recipe from "../Models/Recipe";
 
 const RandomRecipeScreen = props => {
 
-    const unSeenRecipes = useSelector(state => {
-        return state.recipes.unSeenRecipes.unSeenRecipes
-    });
+    const unSeenRecipes = useSelector(state => state.recipes.unSeenRecipes.unSeenRecipes);
     const username = useSelector(state => state.user.user.username);
     const [currentIndex, setCurrentIndex] = useState(0);
     const translateX = useSharedValue(0);
@@ -108,8 +106,11 @@ const RandomRecipeScreen = props => {
                 <PanGestureHandler onEnded={onEnd} onGestureEvent={PanGestureEvent}>
                     <Animated.View
                         style={[styles.square, rStyle]}>
-                        <Image source={{ uri: unSeenRecipes.length >= 0 ? unSeenRecipes[currentIndex].imageUri : '' }}
-                            style={styles.image} />
+                        <View>
+                            <Image source={{ uri: unSeenRecipes.length >= 0 ? unSeenRecipes[currentIndex].imageUri : '' }}
+                                style={styles.image} />
+                            <Text style={styles.text}>{unSeenRecipes[currentIndex].title}</Text>
+                        </View>
                     </Animated.View>
                 </PanGestureHandler>
             </View>
@@ -123,11 +124,19 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         height: '100%',
+        backgroundColor: 'silver',
     },
     image: {
-        width: '100%',
-        height: '100%',
-
+        width: '95%',
+        height: '95%',
+        marginLeft:'2.5%',
+        marginTop:'2.5%',
+    },
+    text: {
+        position: 'absolute',
+        alignSelf:'center',
+        marginTop:'135%',
+        adjustsFontSizeToFit,
     }
 })
 //#endregion
