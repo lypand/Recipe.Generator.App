@@ -39,8 +39,6 @@ const RandomRecipeScreen = props => {
                 });
             }
             else {
-                console.log("Yum this was liked by " + username);
-
                 updateRecipeStatus(unSeenRecipes[currentIndex].id, 1).then(() => {
                     dispatch(removeUnseenRecipe(unSeenRecipes[currentIndex]));
                     dispatch(addFavoriteRecipe(new Recipe(unSeenRecipes[currentIndex].id, unSeenRecipes[currentIndex].title, unSeenRecipes[currentIndex].webUri, unSeenRecipes[currentIndex].imageUri, '', '', '','', '', '', JSON.parse(unSeenRecipes[currentIndex].ingredients), JSON.parse(unSeenRecipes[currentIndex].instructions))));

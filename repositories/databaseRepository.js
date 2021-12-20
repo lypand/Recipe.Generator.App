@@ -95,7 +95,9 @@ export const getRecipesByStatus = (status) => {
   return promise;
 }
 
-
+// Status 0 == unseen
+// Status 1 == liked
+// Status 2 == disliked
 export const updateRecipeStatus = (recipeId, status) => {
   const promise = new Promise((resolve, reject) => {
     db.transaction(tx => {

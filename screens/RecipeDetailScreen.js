@@ -1,10 +1,25 @@
 import { View, Text, Image, StyleSheet, ScrollView, Linking, Button, FlatList } from "react-native";
 import React, { useEffect } from 'react';
 import CustomCheckBox from "../components/CustomCheckBox";
+import { updateRecipeStatus } from "../repositories/databaseRepository";
+import { useDispatch } from "react-redux";
+import { removeFavoriteRecipe } from "../store/actions/RecipeAction";
 
-const RecipeDetailScreen = ({ route }) => {
+const RecipeDetailScreen = ({ route, navigation  }) => {
 
     const recipe = route.params.recipe;
+    const dispatch = useDispatch();
+
+    const removeRecipe = (id) => {
+        updateRecipeStatus(id, 2).then(() => {
+            dispatch(removeFavoriteRecipe(id)); 
+            navigation.navigate('Saved Recipes');  
+        }).catch(err => {
+            console.log(err);
+            navigation.navigate('Saved Recipes');  
+        });
+    }
+
 
     const headerComponent = () => {
         return (
@@ -63,6 +78,7 @@ const RecipeDetailScreen = ({ route }) => {
                 ListFooterComponent={
                     <>
                         {ListFooterComponent()}
+                        <Button title="Remove" onPress={() => removeRecipe(recipe.id)}/>
                     </>
                 }
                 showsVerticalScrollIndicator={false}

@@ -3,9 +3,9 @@ import { View, Text, StyleSheet, Button, TextInput, Image, FlatList } from 'reac
 import RecipeCard from '../components/RecipeCard'
 import { useSelector, useDispatch } from 'react-redux';
 import { useIsFocused } from '@react-navigation/native';
-import { getRecipesByStatus } from "../repositories/databaseRepository";
-import { addFavoriteRecipes } from "../store/actions/RecipeAction";
+import { getRecipesByStatus, updateRecipeStatus } from "../repositories/databaseRepository";
 import Recipe from "../Models/Recipe";
+import { setLoadedFavorites } from "../store/actions/RecipeAction";
 
 const SavedRecipeScreen = props => {
     const isFocused = useIsFocused();
@@ -15,15 +15,17 @@ const SavedRecipeScreen = props => {
     });
     const [filterInput, setFilterInput] = useState(favoriteRecipes);
     const [filterText, setFilterText] = useState('');
+    const loadedFavorites = useSelector(state => state.recipes.session.session);
+
     const dispatch = useDispatch();
-    
+
     useEffect(() => {
         setFilterInput(favoriteRecipes);
         setFilterText('');
     }, [isFocused]);
 
     useEffect(() => {
-        if (favoriteRecipes.length < 2) {
+        if (!loadedFavorites) {
             getRecipesByStatus(1)
                 .then((response) => {
                     const recipesToAdd = [];
@@ -31,7 +33,7 @@ const SavedRecipeScreen = props => {
                         recipesToAdd.push(new Recipe(recipe.id, recipe.title, recipe.webUri, recipe.imageUri, '', '', '', '', '', '', JSON.parse(recipe.ingredients), JSON.parse(recipe.instructions)));
                     }
                     setFilterInput(recipesToAdd.concat(favoriteRecipes));
-                    dispatch(addFavoriteRecipes(recipesToAdd));
+                    dispatch(setLoadedFavorites(true));
                 })
                 .catch(err => {
                     console.log(err);
@@ -74,8 +76,8 @@ const SavedRecipeScreen = props => {
         return age >= 18;
     }
 
-    if (favoriteRecipes.length < 1) {
-        return (<View><Text>No Recipes Saved Yet!</Text></View>)
+    if (favoriteRecipes ? favoriteRecipes.length < 1 : true) {
+        return (<View style={styles.centerText}><Text>No Recipes Saved Yet!</Text></View>)
     } else {
         return (
             <View style={styles.container}>
@@ -100,6 +102,12 @@ export default SavedRecipeScreen;
 
 //#region Styles
 const styles = StyleSheet.create({
+    centerText: {
+        textAlign: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1
+    },
     input: {
         borderWidth: 1,
         width: '80%'
