@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from 'react-redux';
-import { TextInput, View, Button, Text, StyleSheet, TouchableWithoutFeedback, Keyboard, Alert } from "react-native";
+import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, Alert } from "react-native";
 import { updateUsername } from '../store/actions/UserActions';
 import { reset, insertRecipe, init, doesTableExist } from '../repositories/databaseRepository'
 import { RECIPES } from '../mockData/MockData';
-
+import { Button, Text } from 'react-native-elements';
 const LoginScreen = props => {
 
   const [username, setUsername] = useState('');
@@ -43,8 +43,8 @@ const LoginScreen = props => {
 
   const resetTablesDialogHandler = () => {
     Alert.alert(
-      "Reset All Tables",
-      "Are you sure you want to reset all tables?",
+      "Warning: Reset",
+      "Are you sure you want to reset? All saved recipes will be deleted.",
       [
         {
           text: "Confirm",
@@ -67,7 +67,7 @@ const LoginScreen = props => {
 
     initAndPopulateTables();
   }
-  
+
   const loginButtonPressHandler = () => {
     dispatch(updateUsername(username));
     props.navigation.navigate('MainMenu');
@@ -79,15 +79,39 @@ const LoginScreen = props => {
         Keyboard.dismiss();
       }}>
       <View style={styles.inputStyle}>
-        <TextInput
-          style={styles.textStyle}
-          onChangeText={(username) => setUsername(username)}
-          value={username}
-          placeholder="Username"></TextInput>
-        <View  >
-          <Button onPress={loginButtonPressHandler} title="Login" />
-          <Button onPress={resetTablesDialogHandler} title="Reset All" />
+        <View style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+        <Button
+          title="START"
+          buttonStyle={{ backgroundColor: 'rgba(127, 220, 103, 1)' }}
+          onPress={loginButtonPressHandler}
+          containerStyle={{
+            height: 100,
+            width: 200,
+          }}
+          titleStyle={{
+            color: 'white',
+          }}
+        />
         </View>
+        <Button
+          title="RESET"
+          buttonStyle={{ backgroundColor: 'rgba(214, 61, 57, 1)' }}
+          onPress={resetTablesDialogHandler}
+          containerStyle={{
+            height: 40,
+            width: 200,
+            marginHorizontal: 50,
+            marginVertical: 10,
+          }}
+          titleStyle={{
+            color: 'white',
+            marginHorizontal: 20,
+          }}
+        />
       </View>
 
     </TouchableWithoutFeedback>

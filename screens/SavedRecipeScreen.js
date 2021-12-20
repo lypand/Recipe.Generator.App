@@ -3,29 +3,37 @@ import { View, Text, StyleSheet, Button, TextInput, Image, FlatList } from 'reac
 import RecipeCard from '../components/RecipeCard'
 import { useSelector, useDispatch } from 'react-redux';
 import { useIsFocused } from '@react-navigation/native';
-import { getRecipesByStatus } from "../repositories/databaseRepository";
-import { addFavoriteRecipes } from "../store/actions/RecipeAction";
+import { getRecipesByStatus, updateRecipeStatus } from "../repositories/databaseRepository";
 import Recipe from "../Models/Recipe";
+import { setLoadedFavorites } from "../store/actions/RecipeAction";
 
 const SavedRecipeScreen = props => {
+    const isFocused = useIsFocused();
+
     const favoriteRecipes = useSelector(state => {
         return state.recipes.favoriteRecipes.favorites
     });
-    const [filterInput, setFilterInput] = useState(favoriteRecipes); 
-    const isFocused = useIsFocused();
+    const [filterInput, setFilterInput] = useState(favoriteRecipes);
+    const [filterText, setFilterText] = useState('');
+    const loadedFavorites = useSelector(state => state.recipes.session.session);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (favoriteRecipes.length < 1) {
+        setFilterInput(favoriteRecipes);
+        setFilterText('');
+    }, [isFocused]);
+
+    useEffect(() => {
+        if (!loadedFavorites) {
             getRecipesByStatus(1)
                 .then((response) => {
                     const recipesToAdd = [];
                     for (const recipe of response.rows._array) {
-                        console.log("testing" + JSON.parse(recipe.ingredients)); 
-                        console.log("testing" + JSON.parse(recipe.instructions)); 
-                        recipesToAdd.push(new Recipe(recipe.id, recipe.title, recipe.webUri, recipe.imageUri,'','','','','','', JSON.parse(recipe.ingredients), JSON.parse(recipe.instructions)));
+                        recipesToAdd.push(new Recipe(recipe.id, recipe.title, recipe.webUri, recipe.imageUri, '', '', '', '', '', '', JSON.parse(recipe.ingredients), JSON.parse(recipe.instructions)));
                     }
-                    dispatch(addFavoriteRecipes(recipesToAdd));
+                    setFilterInput(recipesToAdd.concat(favoriteRecipes));
+                    dispatch(setLoadedFavorites(true));
                 })
                 .catch(err => {
                     console.log(err);
@@ -35,45 +43,45 @@ const SavedRecipeScreen = props => {
 
 
     const filter = (inputText) => {
-        if(inputText === ''){
-            setFilterInput(favoriteRecipes); 
-            return; 
+        setFilterText(inputText);
+        if (inputText === '') {
+            setFilterInput(favoriteRecipes);
+            return;
         }
-        setFilterInput(favoriteRecipes.filter((item) => executeFilter(item, inputText))); 
+        setFilterInput(favoriteRecipes.filter((item) => executeFilter(item, inputText)));
     }
 
     const executeFilter = (item, inputText) => {
-        if(item.title.toLowerCase().includes(inputText.toLowerCase())){
-            return true; 
+        if (item.title.toLowerCase().includes(inputText.toLowerCase())) {
+            return true;
         }
 
-        for(let i = 0; i < item.ingredients.length; i++){
-            console.log(item.ingredients[i]); 
-            if(item.ingredients[i].toLowerCase().includes(inputText.toLowerCase())){
-                return true; 
+        for (let i = 0; i < item.ingredients.length; i++) {
+            if (item.ingredients[i].toLowerCase().includes(inputText.toLowerCase())) {
+                return true;
             }
         }
-        return false; 
+        return false;
     }
-    
+
     const ages = [32, 33, 16, 40];
-const result = ages.filter(checkAdult);
+    const result = ages.filter(checkAdult);
 
-function checkAdult(age) {
-  return age >= 18;
-}
+    function checkAdult(age) {
+        return age >= 18;
+    }
 
 
-function checkAdult(age) {
-  return age >= 18;
-}
+    function checkAdult(age) {
+        return age >= 18;
+    }
 
-    if (favoriteRecipes.length < 1) {
-        return (<View><Text>No Recipes Saved Yet!</Text></View>)
+    if (favoriteRecipes ? favoriteRecipes.length < 1 : true) {
+        return (<View style={styles.centerText}><Text>No Recipes Saved Yet!</Text></View>)
     } else {
         return (
             <View style={styles.container}>
-                <TextInput style={styles.input} placeholder="search" onChangeText={(input) => filter(input)}></TextInput>
+                <TextInput value={filterText} style={styles.input} placeholder="search" onChangeText={(input) => filter(input)}></TextInput>
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
@@ -94,6 +102,12 @@ export default SavedRecipeScreen;
 
 //#region Styles
 const styles = StyleSheet.create({
+    centerText: {
+        textAlign: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1
+    },
     input: {
         borderWidth: 1,
         width: '80%'
