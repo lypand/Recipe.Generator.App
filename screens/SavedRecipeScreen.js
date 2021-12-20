@@ -10,42 +10,38 @@ import Recipe from "../Models/Recipe";
 const SavedRecipeScreen = props => {
     const isFocused = useIsFocused();
 
-    const favoriteRecipes = useSelector(state => {        
-        //console.log(filterInput ? filterInput.forEach(element => console.log(element)) : '');
-        //console.log(state.recipes.favoriteRecipes.favorites); 
+    const favoriteRecipes = useSelector(state => {
         return state.recipes.favoriteRecipes.favorites
     });
     const [filterInput, setFilterInput] = useState(favoriteRecipes);
     const [filterText, setFilterText] = useState('');
     const dispatch = useDispatch();
+    
+    useEffect(() => {
+        setFilterInput(favoriteRecipes);
+        setFilterText('');
+    }, [isFocused]);
 
     useEffect(() => {
-        if(isFocused === true){
-            setFilterInput(favoriteRecipes);
-            setFilterText(''); 
-        }
-    }, [isFocused]); 
-
-    useEffect(() => {
-        if(favoriteRecipes.length < 2) {
-        getRecipesByStatus(1)
-            .then((response) => {
-                const recipesToAdd = [];
-                for (const recipe of response.rows._array) {
-                    recipesToAdd.push(new Recipe(recipe.id, recipe.title, recipe.webUri, recipe.imageUri, '', '', '', '', '', '', JSON.parse(recipe.ingredients), JSON.parse(recipe.instructions)));
-                }
-                setFilterInput(recipesToAdd.concat(favoriteRecipes));
-                dispatch(addFavoriteRecipes(recipesToAdd));
-            })
-            .catch(err => {
-                console.log(err);
-            })
+        if (favoriteRecipes.length < 2) {
+            getRecipesByStatus(1)
+                .then((response) => {
+                    const recipesToAdd = [];
+                    for (const recipe of response.rows._array) {
+                        recipesToAdd.push(new Recipe(recipe.id, recipe.title, recipe.webUri, recipe.imageUri, '', '', '', '', '', '', JSON.parse(recipe.ingredients), JSON.parse(recipe.instructions)));
+                    }
+                    setFilterInput(recipesToAdd.concat(favoriteRecipes));
+                    dispatch(addFavoriteRecipes(recipesToAdd));
+                })
+                .catch(err => {
+                    console.log(err);
+                })
         }
     }, []);
 
 
     const filter = (inputText) => {
-        setFilterText(inputText); 
+        setFilterText(inputText);
         if (inputText === '') {
             setFilterInput(favoriteRecipes);
             return;
