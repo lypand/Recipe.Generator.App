@@ -136,7 +136,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         alignSelf:'center',
         marginTop:'135%',
-        adjustsFontSizeToFit,
     }
 })
 //#endregion
