@@ -71,10 +71,10 @@ const RandomRecipeScreen = props => {
             const distance = Math.sqrt(translateX.value ** 2 + translateY.value ** 2);
             if (distance > 150) {
                 if (event.translationX < 1) {
-                    runOnJS(setBackgroundColor)('green');
+                    runOnJS(setBackgroundColor)('red');
                 }
                 else {
-                    runOnJS(setBackgroundColor)('red');
+                    runOnJS(setBackgroundColor)('green');
                 }
             }else{
                 runOnJS(setBackgroundColor)('silver');
