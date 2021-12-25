@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useIsFocused } from '@react-navigation/native';
 import { getRecipesByStatus, updateRecipeStatus } from "../repositories/databaseRepository";
 import Recipe from "../Models/Recipe";
-import { setLoadedFavorites } from "../store/actions/RecipeAction";
+import { addFavoriteRecipes, setLoadedFavorites } from "../store/actions/RecipeAction";
 
 const SavedRecipeScreen = props => {
     const isFocused = useIsFocused();
@@ -20,8 +20,10 @@ const SavedRecipeScreen = props => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        setFilterInput(favoriteRecipes);
-        setFilterText('');
+        if(isFocused){
+            setFilterInput(favoriteRecipes);
+            setFilterText('');
+        }
     }, [isFocused]);
 
     useEffect(() => {
@@ -32,7 +34,12 @@ const SavedRecipeScreen = props => {
                     for (const recipe of response.rows._array) {
                         recipesToAdd.push(new Recipe(recipe.id, recipe.title, recipe.webUri, recipe.imageUri, '', '', '', '', '', '', JSON.parse(recipe.ingredients), JSON.parse(recipe.instructions)));
                     }
-                    setFilterInput(recipesToAdd.concat(favoriteRecipes));
+                    if(recipesToAdd.length < 1){
+                        return; 
+                    }
+                    const newSet = recipesToAdd.concat(favoriteRecipes)
+                    setFilterInput(newSet);
+                    dispatch(addFavoriteRecipes(newSet));
                     dispatch(setLoadedFavorites(true));
                 })
                 .catch(err => {
@@ -76,7 +83,7 @@ const SavedRecipeScreen = props => {
         return age >= 18;
     }
 
-    if (favoriteRecipes ? favoriteRecipes.length < 1 : true) {
+    if (favoriteRecipes !== undefined ? favoriteRecipes.length < 1 : true) {
         return (<View style={styles.centerText}><Text>No Recipes Saved Yet!</Text></View>)
     } else {
         return (

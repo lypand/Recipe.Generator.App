@@ -4,9 +4,14 @@ export const GET_ALL_UNSEEN_RECIPES = "GET_ALL_UNSEEN_RECIPES";
 export const REMOVE_UNSEEN_RECIPE = "REMOVE_UNSEEN_RECIPE";
 export const REMOVE_FAVORITE_RECIPE = "REMOVE_FAVORITE_RECIPE"; 
 export const UPDATE_LOADED_FAVORITES = "UPDATE_LOADED_FAVORITES"; 
+export const RESET_ALL = "RESET_ALL"; 
 
 export const addFavoriteRecipe = (recipe) => {
     return { type: ADD_FAVORITE_RECIPE, recipe: recipe }
+}
+
+export const resetAll = () => {
+    return { type: RESET_ALL }
 }
 
 export const removeUnseenRecipe = (recipe) => {

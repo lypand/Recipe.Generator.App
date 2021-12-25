@@ -106,7 +106,7 @@ const RandomRecipeScreen = props => {
     });
 
     //#endregion
-    if (unSeenRecipes.length < 1) {
+    if (unSeenRecipes && unSeenRecipes.length < 1) {
         return (<Text>Loading...</Text>);
     } else {
         return (
@@ -117,7 +117,7 @@ const RandomRecipeScreen = props => {
                     <Animated.View
                         style={[styles.square, rStyle]}>
                         <View>
-                            <Image source={{ uri: unSeenRecipes.length >= 0 ? unSeenRecipes[currentIndex].imageUri : '' }}
+                            <Image source={{ uri: unSeenRecipes && unSeenRecipes.length >= 0 ? unSeenRecipes[currentIndex].imageUri : '' }}
                                 style={styles.image} />
                             <Text numberOfLines={2} adjustsFontSizeToFit={true} style={styles.text}>{unSeenRecipes[currentIndex].title}</Text>
                         </View>

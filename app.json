@@ -2,9 +2,9 @@
   "expo": {
     "name": "Recipe.Generator.App",
     "slug": "recipe-generator-app",
-    "version": "2.0.3",
+    "version": "2.0.4",
     "orientation": "default",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",

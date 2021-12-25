@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from 'react-redux';
-import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, Alert } from "react-native";
+import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, Alert, Image } from "react-native";
 import { updateUsername } from '../store/actions/UserActions';
 import { reset, insertRecipe, init, doesTableExist } from '../repositories/databaseRepository'
 import { RECIPES } from '../mockData/MockData';
 import { Button, Text } from 'react-native-elements';
+import { resetAll } from "../store/actions/RecipeAction";
+
 const LoginScreen = props => {
 
   const [username, setUsername] = useState('');
@@ -58,6 +60,7 @@ const LoginScreen = props => {
   }
 
   const resetTables = () => {
+    dispatch(resetAll()); 
     reset().then(() => {
       console.log("Reset Table");
     }).catch(err => {
@@ -66,6 +69,7 @@ const LoginScreen = props => {
     });
 
     initAndPopulateTables();
+
   }
 
   const loginButtonPressHandler = () => {
@@ -84,9 +88,16 @@ const LoginScreen = props => {
           alignItems: 'center',
           justifyContent: 'center'
         }}>
+          
+          <View style={{
+            marginBottom: 30
+
+          }}>
+        <Image source={require('../assets/logo.png')} />
+        </View>
         <Button
           title="START"
-          buttonStyle={{ backgroundColor: 'rgba(127, 220, 103, 1)' }}
+          buttonStyle={{ backgroundColor: 'rgba(100, 200, 103, .8)' }}
           onPress={loginButtonPressHandler}
           containerStyle={{
             height: 100,
@@ -99,7 +110,7 @@ const LoginScreen = props => {
         </View>
         <Button
           title="RESET"
-          buttonStyle={{ backgroundColor: 'rgba(214, 61, 57, 1)' }}
+          buttonStyle={{ backgroundColor: 'rgba(214, 61, 57, .8)' }}
           onPress={resetTablesDialogHandler}
           containerStyle={{
             height: 40,

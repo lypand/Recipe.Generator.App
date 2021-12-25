@@ -5,19 +5,38 @@ import CustomRecipeScreen from '../screens/CustomRecipeScreen'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import { Ionicons, Entypo, FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons, Entypo, FontAwesome5, SimpleLineIcons } from '@expo/vector-icons';
 import RecipeDetailScreen from '../screens/RecipeDetailScreen';
+import { sendEmail } from '../components/Email';
 const BottomTab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const StackRoot = () => {
+
+    // example.js
+
+const sendEmailHandler = () => {
+    sendEmail(
+        'recipescraperresults@gmail.com',
+        'Inquiry!',
+        'Insert your questions, new feature ideas, and comments below!'
+    ).then(() => {
+    });
+} 
+
+
     return (
         <Stack.Navigator
             screenOptions={{
+                headerRight:() => (
+                    <SimpleLineIcons onPress={sendEmailHandler} style={{marginRight:10}} name="question" size={24} color='white' >
+                        
+                    </SimpleLineIcons>
+                ),
                 headerTintColor: 'white',
                 gestureEnabled: false,
                 headerStyle: {
-                    backgroundColor: '#6a0080'
+                    backgroundColor: 'rgba(170,170,170,0.7)'
                 }
             }}>
             <Stack.Screen

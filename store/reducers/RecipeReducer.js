@@ -1,5 +1,5 @@
 import Recipe from '../../Models/Recipe'
-import { UPDATE_LOADED_FAVORITES, ADD_FAVORITE_RECIPE, ADD_FAVORITE_RECIPES, GET_ALL_UNSEEN_RECIPES, REMOVE_FAVORITE_RECIPE, REMOVE_UNSEEN_RECIPE } from '../actions/RecipeAction';
+import { UPDATE_LOADED_FAVORITES, ADD_FAVORITE_RECIPE, ADD_FAVORITE_RECIPES, GET_ALL_UNSEEN_RECIPES, REMOVE_FAVORITE_RECIPE, REMOVE_UNSEEN_RECIPE, RESET_ALL } from '../actions/RecipeAction';
 
 const initialState = {
     session: {
@@ -54,10 +54,15 @@ const RecipeReducer = (state = initialState, action) => {
                 return state;
             }
         case ADD_FAVORITE_RECIPE:
-            if (state.favoriteRecipes.favorites.find(favorite => favorite.id == action.recipe.id)) {
-                return state;
-            }
+
             const updatedFavorites = { ...state.favoriteRecipes };
+            if (!updatedFavorites.favorites) {
+                updatedFavorites.favorites = []; 
+            } else {
+                if (updatedFavorites.favorites.find(favorite => favorite.id == action.recipe.id)) {
+                    return state;
+                }
+            }
             updatedFavorites.favorites.push(action.recipe);
             return { ...state, favoriteRecipes: updatedFavorites }
         case GET_ALL_UNSEEN_RECIPES:
@@ -80,6 +85,8 @@ const RecipeReducer = (state = initialState, action) => {
             const session = { ...state.session };
             session.session = action.recipe;
             return { ...state, session: session }
+        case RESET_ALL:
+            return { ...state, unSeenRecipes: { unSeenRecipes: [] }, favoriteRecipes: {} }
         default:
             return state;
     }
